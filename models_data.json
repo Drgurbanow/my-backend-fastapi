@@ -1,0 +1,18 @@
+{
+    "models": [
+        {
+            "name": "resnet50",
+            "weights": [
+                "modelfood[0.9283]_weights.pth",
+                "resnet50_default.pth"
+            ]
+        },
+        {
+            "name": "effnet_b0",
+            "weights": [
+                "food_efficientnet_b0[0.92186-dp(0.2)]_weights.pth",
+                "effnet_b0_default.pth"
+            ]
+        }
+    ]
+}
