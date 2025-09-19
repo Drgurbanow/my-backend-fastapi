@@ -13,7 +13,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-HF_URL = "https://huggingface.co/Gurbanov/New_model/blob/main"
+HF_URL = "https://huggingface.co/Gurbanov/New_model/tree/main"
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 JSON_PATH = os.path.join(BASE_DIR, "models_data.json")
 MODELS_DIR = os.path.join(BASE_DIR, "models")
