@@ -69,13 +69,14 @@ def check_remote_file_exists(url: str):
 def download_weights_proxy(model: str, weights: str):
     if not check_local_data(model, weights):
         raise HTTPException(status_code=404, detail="Incorrect data")
-    url = f"{HF_URL}/models/{weights}.pth"
+    url = f"{HF_URL}/models/{MODELS_DB[weights]}.pth"
     if check_remote_file_exists(url):
         r = requests.get(url, stream=True)
         return StreamingResponse(
             r.iter_content(chunk_size=8192),
             media_type="application/octet-stream",
-            headers={"Content-Disposition": f'attachment; filename="{weights}.pth"'}
+            headers={"Content-Disposition": f'attachment; filename="{MODELS_DB[weights]}.pth"'}
         )
     raise HTTPException(status_code=404, detail="Weights not found")
+
 
