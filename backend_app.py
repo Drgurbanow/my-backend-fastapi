@@ -70,15 +70,18 @@ def download_weights_proxy(model: str, weights: str):
     checked = check_local_data(model, weights)
     if checked is None:
         raise HTTPException(status_code=404, detail="Incorrect data")
-    url = f"{HF_URL}/models/{checked["weights"][weights]}"
+    url = f"{HF_URL}/models/{checked["weights"][weights]}.pth"
     if check_remote_file_exists(url):
         r = requests.get(url, stream=True)
+        size = int(r.headers.get("content-length", 0))
         return StreamingResponse(
-            r.iter_content(chunk_size=8192),
+            r.iter_content(chunk_size=65536),
             media_type="application/octet-stream",
-            headers={"Content-Disposition": f'attachment; filename="{weights}.pth"'}
+            headers={"Content-Disposition": f'attachment; filename="{weights}.pth"',
+                     "Content-Length": str(size)}
         )
     raise HTTPException(status_code=404, detail="Weights not found")
+
 
 
 
