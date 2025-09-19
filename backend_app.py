@@ -52,8 +52,8 @@ def get_model_weights_names(model_name: str):
 def check_local_data(model: str, weights: str):
     for m in MODELS_DB["models"]:
         if m["name"] == model and weights in m["weights"]:
-            return True
-    return False
+            return m
+    return None
 
 
 def check_remote_file_exists(url: str):
@@ -67,15 +67,16 @@ def check_remote_file_exists(url: str):
 
 @app.get("/download/{model}/{weights}")
 def download_weights_proxy(model: str, weights: str):
-    if not check_local_data(model, weights):
+    checked = check_local_data(model, weights)
+    if checked is None:
         raise HTTPException(status_code=404, detail="Incorrect data")
-    url = f"{HF_URL}/models/{MODELS_DB[weights]}.pth"
+    url = f"{HF_URL}/models/{checked["weights"][weights]}.pth"
     if check_remote_file_exists(url):
         r = requests.get(url, stream=True)
         return StreamingResponse(
             r.iter_content(chunk_size=8192),
             media_type="application/octet-stream",
-            headers={"Content-Disposition": f'attachment; filename="{MODELS_DB[weights]}.pth"'}
+            headers={"Content-Disposition": f'attachment; filename="{weights}.pth"'}
         )
     raise HTTPException(status_code=404, detail="Weights not found")
 
