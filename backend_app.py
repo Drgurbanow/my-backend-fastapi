@@ -16,9 +16,9 @@ app.add_middleware(
 HF_URL = "https://huggingface.co/Gurbanov/New_model/resolve/main"
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 JSON_PATH = os.path.join(BASE_DIR, "models_data.json")
-MODELS_DIR = os.path.join(BASE_DIR, "models")
+CLASS_NAMES_DIR = os.path.join(BASE_DIR, "dataset_classes_names.json")
 
-print(BASE_DIR, JSON_PATH, MODELS_DIR, sep="\n")
+
 with open(JSON_PATH, "r", encoding="utf-8") as f:
     MODELS_DB = json.load(f)
 
@@ -47,6 +47,15 @@ def get_model_weights_names(model_name: str):
         if m["name"] == model_name:
             return m["weights"]
     raise HTTPException(status_code=404, detail="Model not found")
+
+
+@app.get("/class_names/{weights}")
+def get_dataset_classes(weights: str):
+    with open(CLASS_NAMES_DIR, mode="r", encoding="utf-8") as file:
+        data = json.load(file)
+    if weights not in CLASS_NAMES_DIR:
+        raise HTTPException(status_code=404, detail="Data not found")
+    return data[weights]
 
 
 def check_local_data(model: str, weights: str):
@@ -81,6 +90,7 @@ def download_weights_proxy(model: str, weights: str):
                      "Content-Length": str(size)}
         )
     raise HTTPException(status_code=404, detail="Weights not found")
+
 
 
 
