@@ -53,7 +53,7 @@ def get_model_weights_names(model_name: str):
 def get_dataset_classes(weights: str):
     with open(CLASS_NAMES_DIR, mode="r", encoding="utf-8") as file:
         data = json.load(file)
-    if weights not in CLASS_NAMES_DIR:
+    if weights not in data:
         raise HTTPException(status_code=404, detail="Data not found")
     return data[weights]
 
@@ -90,6 +90,7 @@ def download_weights_proxy(model: str, weights: str):
                      "Content-Length": str(size)}
         )
     raise HTTPException(status_code=404, detail="Weights not found")
+
 
 
 
