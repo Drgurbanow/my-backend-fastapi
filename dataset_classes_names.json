@@ -1,5 +1,5 @@
 {
-    "imagenet_classes": [
+    "imagenet_classes1000": [
         "tench",
         "goldfish",
         "great white shark",
@@ -1104,4 +1104,5 @@
         "tuna_tartare",
         "waffles"
     ]
+
 }
